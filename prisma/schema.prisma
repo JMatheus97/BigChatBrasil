@@ -1,0 +1,46 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = "postgresql://user:password@localhost:5432/nomeBanco?schema=public"
+}
+
+
+model Cliente {
+  id      Int      @id @default(autoincrement())
+  email   String   @unique
+  nome    String
+  telefone String
+  cpf String?
+  cnpj String?
+  nomeEmpresa String
+  tipoPlano String
+  saldoCred Float @unique
+  limiteMax Float @unique
+  mensagem Mensagem[]
+  backofficeFinanceiro BackofficeFinanceiro []
+}
+
+model Mensagem  {
+  id      Int      @id @default(autoincrement())
+  numeroTelefone   String
+  flagWhatsApp Boolean
+  textoMensagem String
+  cliente Cliente @relation(fields: [idCliente], references: [id])
+  idCliente Int
+}
+
+model BackofficeFinanceiro {
+   idBackoffice       Int      @id @default(autoincrement())
+   cliente Cliente @relation(fields: [idCliente], references: [id])
+   idCliente Int
+   tipoOperacao String
+}
+
+
+
